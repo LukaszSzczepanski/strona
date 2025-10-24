@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odtwarzacz MP3 i MP4</title>
+    <title>Odtwarzacz MP3 / MP4</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -17,38 +17,144 @@
             color: #4CAF50;
         }
 
-        .media-container {
-            margin: 30px auto;
+        .player-box {
+            margin: 40px auto;
+            background: #1e1e1e;
+            padding: 25px;
+            border-radius: 12px;
             max-width: 600px;
+            box-shadow: 0 0 10px #000;
         }
 
-        audio, video {
+        video, audio {
             width: 100%;
-            outline: none;
+            border-radius: 10px;
             border: 2px solid #4CAF50;
-            border-radius: 8px;
-            background-color: #000;
+            margin-top: 15px;
+        }
+
+        input[type="file"],
+        input[type="text"] {
+            width: 80%;
+            max-width: 450px;
+            margin: 10px auto;
+            padding: 10px;
+            font-size: 15px;
+            border-radius: 6px;
+            border: none;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .source-option {
+            margin: 10px 0;
         }
     </style>
 </head>
 <body>
-    <h1>🎧 Odtwarzacz MP3 i 🎬 MP4</h1>
 
-    <div class="media-container">
+    <h1>🎵🎬 Odtwarzacz MP3 / MP4</h1>
+
+    <!-- Sekcja audio -->
+    <div class="player-box">
         <h2>Odtwarzacz MP3</h2>
-        <audio controls>
-            <source src="mp3.mp3" type="audio/mpeg">
-            Twoja przeglądarka nie obsługuje odtwarzania dźwięku.
-        </audio>
+
+        <div class="source-option">
+            <p><b>Wybierz plik z komputera:</b></p>
+            <input type="file" id="audioFile" accept="audio/mp3,audio/mpeg">
+        </div>
+
+        <div class="source-option">
+            <p><b>Lub wklej link z internetu:</b></p>
+            <input type="text" id="audioLink" placeholder="Wklej link do pliku MP3">
+            <br>
+            <button onclick="loadAudioFromLink()">Odtwórz z linku</button>
+        </div>
+
+        <audio id="audioPlayer" controls></audio>
     </div>
 
-    <div class="media-container">
+    <!-- Sekcja wideo -->
+    <div class="player-box">
         <h2>Odtwarzacz MP4</h2>
-        <video controls>
-            <source src="3sec.mp4" type="video/mp4">
-            Twoja przeglądarka nie obsługuje odtwarzania wideo.
-        </video>
+
+        <div class="source-option">
+            <p><b>Wybierz plik z komputera:</b></p>
+            <input type="file" id="videoFile" accept="video/mp4">
+        </div>
+
+        <div class="source-option">
+            <p><b>Lub wklej link z internetu:</b></p>
+            <input type="text" id="videoLink" placeholder="Wklej link do pliku MP4">
+            <br>
+            <button onclick="loadVideoFromLink()">Odtwórz z linku</button>
+        </div>
+
+        <video id="videoPlayer" controls></video>
     </div>
 
+    <script>
+        // Obsługa MP3 z komputera
+        document.getElementById('audioFile').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                const player = document.getElementById('audioPlayer');
+                player.src = url;
+                player.play();
+            }
+        });
+
+        // Obsługa MP3 z linku
+        function loadAudioFromLink() {
+            const link = document.getElementById('audioLink').value.trim();
+            const player = document.getElementById('audioPlayer');
+
+            if (link === "") {
+                alert("Wklej link do pliku MP3!");
+                return;
+            }
+
+            player.src = link;
+            player.play();
+        }
+
+        // Obsługa MP4 z komputera
+        document.getElementById('videoFile').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                const player = document.getElementById('videoPlayer');
+                player.src = url;
+                player.play();
+            }
+        });
+
+        // Obsługa MP4 z linku
+        function loadVideoFromLink() {
+            const link = document.getElementById('videoLink').value.trim();
+            const player = document.getElementById('videoPlayer');
+
+            if (link === "") {
+                alert("Wklej link do pliku MP4!");
+                return;
+            }
+
+            player.src = link;
+            player.play();
+        }
+    </script>
 </body>
 </html>
