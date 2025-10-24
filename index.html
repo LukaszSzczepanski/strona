@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odtwarzacz MP3 / MP4</title>
+    <title>Odtwarzacz MP3 / MP4 / YouTube</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -26,7 +26,7 @@
             box-shadow: 0 0 10px #000;
         }
 
-        video, audio {
+        video, audio, iframe {
             width: 100%;
             border-radius: 10px;
             border: 2px solid #4CAF50;
@@ -65,7 +65,7 @@
 </head>
 <body>
 
-    <h1>🎵🎬 Odtwarzacz MP3 / MP4</h1>
+    <h1>🎵🎬 Odtwarzacz MP3 / MP4 / YouTube</h1>
 
     <!-- Sekcja audio -->
     <div class="player-box">
@@ -81,7 +81,7 @@
 
     <!-- Sekcja wideo -->
     <div class="player-box">
-        <h2>Odtwarzacz MP4</h2>
+        <h2>Odtwarzacz MP4 / YouTube</h2>
 
         <div class="source-option">
             <p><b>Wybierz plik z komputera:</b></p>
@@ -89,17 +89,19 @@
         </div>
 
         <div class="source-option">
-            <p><b>Lub wklej link z internetu:</b></p>
-            <input type="text" id="videoLink" placeholder="Wklej link do pliku MP4">
+            <p><b>Lub wklej link z internetu (MP4 lub YouTube):</b></p>
+            <input type="text" id="videoLink" placeholder="Wklej link do MP4 lub YouTube">
             <br>
             <button onclick="loadVideoFromLink()">Odtwórz z linku</button>
         </div>
 
-        <video id="videoPlayer" controls></video>
+        <!-- Odtwarzacze -->
+        <video id="videoPlayer" controls style="display:none;"></video>
+        <iframe id="youtubePlayer" frameborder="0" allowfullscreen style="display:none;"></iframe>
     </div>
 
     <script>
-        // Obsługa MP3 z komputera
+        // MP3 z komputera
         document.getElementById('audioFile').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
@@ -110,43 +112,51 @@
             }
         });
 
-        // Obsługa MP3 z linku
-        function loadAudioFromLink() {
-            const link = document.getElementById('audioLink').value.trim();
-            const player = document.getElementById('audioPlayer');
-
-            if (link === "") {
-                alert("Wklej link do pliku MP3!");
-                return;
-            }
-
-            player.src = link;
-            player.play();
-        }
-
-        // Obsługa MP4 z komputera
+        // MP4 z komputera
         document.getElementById('videoFile').addEventListener('change', function(event) {
             const file = event.target.files[0];
             if (file) {
                 const url = URL.createObjectURL(file);
-                const player = document.getElementById('videoPlayer');
-                player.src = url;
-                player.play();
+                const videoPlayer = document.getElementById('videoPlayer');
+                const youtubePlayer = document.getElementById('youtubePlayer');
+
+                youtubePlayer.style.display = 'none';
+                videoPlayer.style.display = 'block';
+
+                videoPlayer.src = url;
+                videoPlayer.play();
             }
         });
 
-        // Obsługa MP4 z linku
+        // Odtwarzanie z linku (MP4 lub YouTube)
         function loadVideoFromLink() {
             const link = document.getElementById('videoLink').value.trim();
-            const player = document.getElementById('videoPlayer');
+            const videoPlayer = document.getElementById('videoPlayer');
+            const youtubePlayer = document.getElementById('youtubePlayer');
 
             if (link === "") {
-                alert("Wklej link do pliku MP4!");
+                alert("Wklej link do pliku MP4 lub YouTube!");
                 return;
             }
 
-            player.src = link;
-            player.play();
+            // Sprawdź czy to YouTube
+            const youtubeRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/;
+            const match = link.match(youtubeRegex);
+
+            if (match) {
+                const videoId = match[1];
+                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
+
+                videoPlayer.style.display = 'none';
+                youtubePlayer.style.display = 'block';
+                youtubePlayer.src = embedUrl;
+            } else {
+                // Inny link – MP4
+                youtubePlayer.style.display = 'none';
+                videoPlayer.style.display = 'block';
+                videoPlayer.src = link;
+                videoPlayer.play();
+            }
         }
     </script>
 </body>
