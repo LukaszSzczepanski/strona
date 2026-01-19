@@ -2,162 +2,24 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Odtwarzacz MP3 / MP4 / YouTube</title>
+    <title>Obracanie zdjęcia</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #fff;
-            text-align: center;
-            padding: 40px;
-        }
-
-        h1 {
-            color: #4CAF50;
-        }
-
-        .player-box {
-            margin: 40px auto;
-            background: #1e1e1e;
-            padding: 25px;
-            border-radius: 12px;
-            max-width: 600px;
-            box-shadow: 0 0 10px #000;
-        }
-
-        video, audio, iframe {
-            width: 100%;
-            border-radius: 10px;
-            border: 2px solid #4CAF50;
-            margin-top: 15px;
-        }
-
-        input[type="file"],
-        input[type="text"] {
-            width: 80%;
-            max-width: 450px;
-            margin: 10px auto;
-            padding: 10px;
-            font-size: 15px;
-            border-radius: 6px;
-            border: none;
-        }
-
-        button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-        }
-
-        button:hover {
-            background-color: #45a049;
-        }
-
-        .source-option {
-            margin: 10px 0;
+        img {
+            width: 300px;
+            transition: transform 0.5s;
         }
     </style>
 </head>
 <body>
 
-    <h1>🎵🎬 Odtwarzacz MP3 / MP4 / YouTube</h1>
+    <h1>Obrót zdjęcia o 180°</h1>
 
-    <!-- Sekcja audio -->
-    <div class="player-box">
-        <h2>Odtwarzacz MP3</h2>
+    <img id="photo" src="stu.jpg" alt="Zdjęcie">
 
-        <div class="source-option">
-            <p><b>Wybierz plik z komputera:</b></p>
-            <input type="file" id="audioFile" accept="audio/mp3,audio/mpeg">
-        </div>
+    <br><br>
 
-        <audio id="audioPlayer" controls></audio>
-    </div>
+    <button onclick="rotateImage()">Obróć zdjęcie</button>
 
-    <!-- Sekcja wideo -->
-    <div class="player-box">
-        <h2>Odtwarzacz MP4 / YouTube</h2>
-
-        <div class="source-option">
-            <p><b>Wybierz plik z komputera:</b></p>
-            <input type="file" id="videoFile" accept="video/mp4">
-        </div>
-
-        <div class="source-option">
-            <p><b>Lub wklej link z internetu (MP4 lub YouTube):</b></p>
-            <input type="text" id="videoLink" placeholder="Wklej link do MP4 lub YouTube">
-            <br>
-            <button onclick="loadVideoFromLink()">Odtwórz z linku</button>
-        </div>
-
-        <!-- Odtwarzacze -->
-        <video id="videoPlayer" controls style="display:none;"></video>
-        <iframe id="youtubePlayer" frameborder="0" allowfullscreen style="display:none;"></iframe>
-    </div>
-
-    <script>
-        // MP3 z komputera
-        document.getElementById('audioFile').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                const player = document.getElementById('audioPlayer');
-                player.src = url;
-                player.play();
-            }
-        });
-
-        // MP4 z komputera
-        document.getElementById('videoFile').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                const videoPlayer = document.getElementById('videoPlayer');
-                const youtubePlayer = document.getElementById('youtubePlayer');
-
-                youtubePlayer.style.display = 'none';
-                videoPlayer.style.display = 'block';
-
-                videoPlayer.src = url;
-                videoPlayer.play();
-            }
-        });
-
-        // Odtwarzanie z linku (MP4 lub YouTube)
-        function loadVideoFromLink() {
-            const link = document.getElementById('videoLink').value.trim();
-            const videoPlayer = document.getElementById('videoPlayer');
-            const youtubePlayer = document.getElementById('youtubePlayer');
-
-            if (link === "") {
-                alert("Wklej link do pliku MP4 lub YouTube!");
-                return;
-            }
-
-            // Sprawdź czy to YouTube
-            const youtubeRegex = /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/;
-            const match = link.match(youtubeRegex);
-
-            if (match) {
-                const videoId = match[1];
-                const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-
-                videoPlayer.style.display = 'none';
-                youtubePlayer.style.display = 'block';
-                youtubePlayer.src = embedUrl;
-            } else {
-                // Inny link – MP4
-                youtubePlayer.style.display = 'none';
-                videoPlayer.style.display = 'block';
-                videoPlayer.src = link;
-                videoPlayer.play();
-            }
-        }
-    </script>
+    <script src="java.js"></script>
 </body>
 </html>
